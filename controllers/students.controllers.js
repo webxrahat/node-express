@@ -11,14 +11,14 @@ const getStudents = async (req, res) => {
 
 const saveStudent = async (req, res) => {
   try {
-    const { first_name } = req.body;
+    const { first_name } = req.body || {};
     if (!first_name)
       return res.status(400).json({ message: "All fields are required" });
     const student = await Students.create(req.body);
 
     res.status(201).json(student);
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -48,7 +48,7 @@ const deleteStudent = async (req, res) => {
   try {
     const student = await Students.findByIdAndDelete(req.params.id);
     if (!student) return res.status(404).json({ message: "Student not found" });
-    res.status(200).json({ message: `${student} is deleted` });
+    res.status(200).json({ message: `student is deleted` });
   } catch (error) {
     res.status(500).send(error.message);
   }
