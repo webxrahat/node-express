@@ -11,12 +11,15 @@ const getStudents = async (req, res) => {
 
 const saveStudent = async (req, res) => {
   try {
-    const { first_name } = req.body || {};
-    if (!first_name)
-      return res.status(400).json({ message: "All fields are required" });
-    const student = await Students.create(req.body);
+    const student = new Students(req.body);
 
-    res.status(201).json(student);
+    if (req.file) {
+      student.profile_pic = req.file.filename;
+    }
+
+    const saveStudent = await student.save();
+
+    res.status(201).json(saveStudent);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

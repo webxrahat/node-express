@@ -11,7 +11,7 @@ connectDb();
 
 // MiddleWare
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/students", studentRoutes);
