@@ -15,7 +15,6 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/students", studentRoutes);
-
 app.use(errorHandler);
 
 // Connection
