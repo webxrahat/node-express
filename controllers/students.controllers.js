@@ -37,13 +37,34 @@ const getStudent = async (req, res) => {
 };
 
 const updateStudent = async (req, res) => {
-  const student = await Students.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  if (!student) return res.status(404).json({ message: "Student not found" });
-
-  res.status(200).json(student);
   try {
+    const existingStudent = await Students.findById(req.params.id);
+    if (!existingStudent) {
+      if (req.file.filename) {
+        const filePath = path.join("uploads/", req.file.filename);
+        fs.unlink(filePath, (err) => {
+          if (err) return console.log("failed to delete", err);
+        });
+      }
+
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    if (req.file) {
+      if (existingStudent.profile_pic) {
+        const filePath = path.join("uploads/", existingStudent.profile_pic);
+        fs.unlink(filePath, (err) => {
+          if (err) return console.log("failed to delete old image", err);
+        });
+      }
+      req.body.profile_pic = req.file.filename;
+    }
+
+    const student = await Students.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+
+    res.status(200).json(student);
   } catch (error) {
     res.status(500).send(error.message);
   }

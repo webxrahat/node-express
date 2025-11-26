@@ -16,6 +16,10 @@ router
   .post(upload.single("profile_pic"), saveStudent);
 
 // Get students.routes By ID
-router.route("/:id").get(getStudent).put(updateStudent).delete(deleteStudent);
+router
+  .route("/:id")
+  .get(getStudent)
+  .put(upload.single("profile_pic"), updateStudent)
+  .delete(deleteStudent);
 
 export default router;
