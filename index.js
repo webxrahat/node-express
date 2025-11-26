@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connectDb } from "./config/conectDb.js";
 import studentRoutes from "./routes/students.routes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { multerErrorHander } from "./middleware/multerError.js";
 dotenv.config();
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/students", studentRoutes);
-app.use(errorHandler);
+app.use(errorHandler, multerErrorHander);
 
 // Connection
 const PORT = process.env.PORT || 5000;
