@@ -4,7 +4,16 @@ import fs from "fs";
 
 const getStudents = async (req, res) => {
   try {
-    const students = await Students.find();
+    const search = req.query.search || "";
+
+    const query = {
+      $or: [
+        { first_name: { $regex: search, $options: "i" } },
+        { last_name: { $regex: search, $options: "i" } },
+      ],
+    };
+
+    const students = await Students.find(query);
     res.json(students);
   } catch (error) {
     res.status(500).send(error.message);
